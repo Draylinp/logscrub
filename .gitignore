@@ -1,0 +1,16 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+*.swp
+.idea/
+
+# Dependencias y builds (por si en el futuro agregamos herramientas)
+node_modules/
+dist/
+
+# Archivos de prueba con datos reales: NUNCA los subas
+samples-private/
+*.private.log
