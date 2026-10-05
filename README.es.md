@@ -1,6 +1,7 @@
 # 🧽 LogScrub
 
 [![Tests](https://github.com/Draylinp/logscrub/actions/workflows/test.yml/badge.svg)](https://github.com/Draylinp/logscrub/actions/workflows/test.yml)
+[![npm](https://img.shields.io/npm/v/@draylinp/logscrub.svg)](https://www.npmjs.com/package/@draylinp/logscrub)
 [![Licencia: MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](LICENSE)
 
 **Limpia logs y configuraciones antes de compartirlos. 100 % local, en tu navegador o en tu terminal. Nada se sube.**
@@ -51,7 +52,8 @@ Pega un log, la configuración de un router o la salida de un comando. LogScrub 
 El mismo motor funciona en tu terminal (Node.js 18.3+). No se instala nada de forma global y nada sale de tu equipo.
 
 ```bash
-npx github:Draylinp/logscrub router.rsc > router.limpio.rsc
+npx @draylinp/logscrub router.rsc > router.limpio.rsc   # sin instalar
+npm install -g @draylinp/logscrub                       # o instala el comando logscrub
 ```
 
 ```bash
@@ -104,7 +106,8 @@ tests/              pruebas del motor, los detectores y la CLI
 - [x] v0.4 · Reglas personalizadas
 - [x] v0.5 · Versión en inglés, selector de tema, restaurar respuestas, exportar CSV
 - [x] v0.6 · Juniper, Huawei, VyOS/EdgeOS, pfSense/OPNsense; secretos de nube y DevOps; datos personales; rutas de usuario; números de serie; CLI
-- [ ] v0.7 · Publicar en npm, hook de pre-commit
+- [x] v0.6.1 · Publicado en npm como `@draylinp/logscrub`
+- [ ] v0.7 · Hook de pre-commit, más equipos
 - [ ] v1.0 · API estable
 
 Detalles en [CHANGELOG.md](CHANGELOG.md).

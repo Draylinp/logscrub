@@ -1,6 +1,6 @@
 {
-  "name": "logscrub",
-  "version": "0.6.0",
+  "name": "@draylinp/logscrub",
+  "version": "0.6.1",
   "description": "Sanitize logs and configs before sharing them. 100% local: in your browser or your terminal, nothing is uploaded.",
   "license": "MIT",
   "author": "Draylin",

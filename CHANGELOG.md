@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1 · 2026-10-05
+
+- Published on npm as [`@draylinp/logscrub`](https://www.npmjs.com/package/@draylinp/logscrub): `npx @draylinp/logscrub file.log`
+- Demo GIF and social preview image
+- The restored reply now wraps long lines
+
 ## 0.6.0 · 2026-10-05
 
 - **Command line:** `npx github:Draylinp/logscrub`, with stdin/stdout, multiple files with shared numbering, `--out-dir`, `--map` / `--restore`, `--check` for CI (never prints the values), `--json`, `--stats`
