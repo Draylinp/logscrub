@@ -4,7 +4,7 @@
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { scrub, parseCustomRules } = require("../js/scrubber.js");
+const { scrub, restore, parseCustomRules } = require("../js/scrubber.js");
 
 // Los tokens falsos se arman por partes para que los escáneres de secretos
 // (p. ej. la protección de push de GitHub) no los confundan con reales.
@@ -221,4 +221,32 @@ test("Rendimiento: 1 MB de log en menos de 3 s", () => {
   const r = scrub(big);
   assert.ok(Date.now() - t0 < 3000, `tardó ${Date.now() - t0} ms`);
   assert.ok(!r.output.includes("203.0.113.4"));
+});
+
+test("Formatos de marcador", () => {
+  const t = "203.0.113.1 a@example.com";
+  assert.equal(out(t, { format: "brackets" }), "[IP_1] [EMAIL_1]");
+  assert.equal(out(t, { format: "angle" }), "<IP_1> <EMAIL_1>");
+  assert.equal(out(t, { format: "braces" }), "{{IP_1}} {{EMAIL_1}}");
+  assert.equal(out(t, { format: "desconocido" }), "IP_1 EMAIL_1");
+});
+
+test("restore: devuelve los originales sin confundir IP_1 con IP_10", () => {
+  const ips = Array.from({ length: 10 }, (_, i) => `203.0.113.${i + 1}`).join(" ");
+  const r = scrub(ips);
+  assert.equal(restore(r.output, r.replacements), ips);
+  assert.equal(restore("Revisa IP_10 e IP_1, no IP_100 ni MY_IP_1.", r.replacements), "Revisa 203.0.113.10 e 203.0.113.1, no IP_100 ni MY_IP_1.");
+});
+
+test("restore: funciona con todos los formatos", () => {
+  const t = "user=admin from 203.0.113.1";
+  for (const format of ["plain", "brackets", "angle", "braces"]) {
+    const r = scrub(t, { format });
+    assert.equal(restore(r.output, r.replacements), t, format);
+  }
+});
+
+test("restore: sin reemplazos devuelve el texto tal cual", () => {
+  assert.equal(restore("IP_1", []), "IP_1");
+  assert.equal(restore("", null), "");
 });

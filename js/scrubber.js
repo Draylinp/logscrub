@@ -13,6 +13,15 @@
     keepSpecial: true, // conservar máscaras, 0.0.0.0, loopback, broadcast
     customRules: "", // texto con una regla por línea (ver parseCustomRules)
     allowlist: "", // valores que nunca se reemplazan, uno por línea
+    format: "plain", // aspecto del marcador: ver FORMATS
+  };
+
+  // IP_1 · [IP_1] · <IP_1> · {{IP_1}}
+  const FORMATS = {
+    plain: (p) => p,
+    brackets: (p) => `[${p}]`,
+    angle: (p) => `<${p}>`,
+    braces: (p) => `{{${p}}}`,
   };
 
   function escapeRegExp(s) {
@@ -105,6 +114,7 @@
     const opts = Object.assign({}, DEFAULT_OPTIONS, options);
     const { rules: customRules, errors } = parseCustomRules(opts.customRules);
     const allow = parseAllowlist(opts.allowlist);
+    const wrap = FORMATS[opts.format] || FORMATS.plain;
 
     const detectors = customRules.concat(
       DETECTORS.filter((d) => opts.categories[d.category] !== false).map((d) => ({
@@ -163,7 +173,7 @@
         entry = {
           category: f.category,
           original: f.value,
-          placeholder: `${f.prefix}_${counters[f.prefix]}`,
+          placeholder: wrap(`${f.prefix}_${counters[f.prefix]}`),
           count: 0,
         };
         byKey.set(key, entry);
@@ -187,7 +197,18 @@
     };
   }
 
-  const api = { scrub, parseCustomRules, CATEGORIES, DETECTORS, DEFAULT_OPTIONS };
+  // Operación inversa: devuelve los valores originales a un texto que usa los
+  // marcadores (p. ej. la respuesta de soporte o de una IA sobre el log limpio).
+  function restore(text, replacements) {
+    const input = String(text || "");
+    if (!replacements || !replacements.length) return input;
+    const map = new Map(replacements.map((r) => [r.placeholder, r.original]));
+    const alternatives = [...map.keys()].sort((a, b) => b.length - a.length).map(escapeRegExp);
+    const rx = new RegExp(String.raw`(?<!\w)(?:${alternatives.join("|")})(?!\w)`, "g");
+    return input.replace(rx, (m) => map.get(m));
+  }
+
+  const api = { scrub, restore, parseCustomRules, CATEGORIES, DETECTORS, DEFAULT_OPTIONS, FORMATS };
 
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.LogScrub = api;

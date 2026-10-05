@@ -1,0 +1,37 @@
+name: 🐛 Bug report · Reportar un error
+description: Something was not detected, or was replaced by mistake · Algo no se detectó o se reemplazó por error
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ **Never paste real logs, passwords or tokens here.** Use fake values with the same format.
+        ⚠️ **Nunca pegues logs, contraseñas ni tokens reales aquí.** Usa valores falsos con el mismo formato.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Type · Tipo
+      options:
+        - Not detected · No se detectó
+        - Replaced by mistake (false positive) · Se reemplazó por error
+        - UI problem · Problema de la interfaz
+        - Other · Otro
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Sample input (fake values) · Texto de ejemplo (valores falsos)
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result · Resultado esperado
+      render: text
+  - type: input
+    id: browser
+    attributes:
+      label: Browser · Navegador
+      placeholder: Chrome 130, Firefox 131…

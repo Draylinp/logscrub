@@ -13,15 +13,15 @@
   "use strict";
 
   const CATEGORIES = {
-    privateKey: { label: "Claves privadas", prefix: "PRIVATE_KEY" },
-    token: { label: "Tokens y claves API", prefix: "TOKEN" },
-    secret: { label: "Contraseñas y secretos", prefix: "SECRET" },
-    user: { label: "Usuarios", prefix: "USER" },
-    email: { label: "Correos", prefix: "EMAIL" },
-    mac: { label: "Direcciones MAC", prefix: "MAC" },
+    privateKey: { label: "Private keys", prefix: "PRIVATE_KEY" },
+    token: { label: "Tokens & API keys", prefix: "TOKEN" },
+    secret: { label: "Passwords & secrets", prefix: "SECRET" },
+    user: { label: "Usernames", prefix: "USER" },
+    email: { label: "Emails", prefix: "EMAIL" },
+    mac: { label: "MAC addresses", prefix: "MAC" },
     ipv6: { label: "IPv6", prefix: "IPV6" },
     ipv4: { label: "IPv4", prefix: "IP" },
-    hostname: { label: "Hostnames y dominios", prefix: "HOST" },
+    hostname: { label: "Hostnames & domains", prefix: "HOST" },
   };
 
   // ---------- Utilidades de validación ----------

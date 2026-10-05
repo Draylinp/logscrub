@@ -6,29 +6,54 @@
   <!-- connect-src 'none': el navegador bloquea cualquier envío de datos desde esta página -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="light dark">
   <title>LogScrub · Limpia tus logs antes de compartirlos</title>
   <meta name="description" content="Anonimiza IPs, MACs, correos, contraseñas y tokens en logs y configuraciones. Todo ocurre en tu navegador.">
+  <meta property="og:title" content="LogScrub">
+  <meta property="og:description" content="Sanitize logs and configs before sharing them. 100% in your browser, nothing is uploaded.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://draylinp.github.io/logscrub/">
+  <meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f141c" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/styles.css">
+  <script src="js/theme.js"></script>
 </head>
 <body>
   <header>
-    <h1>🧽 LogScrub</h1>
-    <p>Limpia logs y configuraciones antes de compartirlos.</p>
-    <p class="badge">🔒 100 % en tu navegador. Nada se sube a ningún servidor.</p>
+    <div class="brand">
+      <h1>🧽 LogScrub</h1>
+      <p data-i18n="tagline">Limpia logs y configuraciones antes de compartirlos.</p>
+      <p class="badge" data-i18n="badge">🔒 100 % en tu navegador. Nada se sube a ningún servidor.</p>
+    </div>
+    <div class="toolbar">
+      <button type="button" id="btnLang" class="ghost" data-i18n="langButton" data-i18n-title="langTitle">English</button>
+      <button type="button" id="btnTheme" class="ghost icon" aria-label="Tema"><span aria-hidden="true" id="themeIcon">🖥️</span></button>
+    </div>
   </header>
 
+  <noscript><p class="note" data-i18n="noscript">LogScrub necesita JavaScript. Todo se procesa en tu navegador.</p></noscript>
+
   <main>
-    <section class="options" aria-label="Qué ocultar">
+    <section class="options">
       <fieldset>
-        <legend>Ocultar</legend>
+        <legend data-i18n="legendHide">Ocultar</legend>
         <div id="categories" class="chips"></div>
       </fieldset>
       <fieldset>
-        <legend>Opciones</legend>
+        <legend data-i18n="legendOptions">Opciones</legend>
         <div class="chips">
-          <label class="chip"><input type="checkbox" id="keepPrivate"> Conservar IPs privadas</label>
-          <label class="chip"><input type="checkbox" id="keepSpecial" checked> Conservar máscaras y loopback</label>
+          <label class="chip"><input type="checkbox" id="keepPrivate"> <span data-i18n="keepPrivate">Conservar IPs privadas</span></label>
+          <label class="chip"><input type="checkbox" id="keepSpecial" checked> <span data-i18n="keepSpecial">Conservar máscaras y loopback</span></label>
+          <label class="chip select">
+            <span data-i18n="formatLabel">Marcador</span>
+            <select id="format">
+              <option value="plain">IP_1</option>
+              <option value="brackets">[IP_1]</option>
+              <option value="angle">&lt;IP_1&gt;</option>
+              <option value="braces">{{IP_1}}</option>
+            </select>
+          </label>
         </div>
       </fieldset>
     </section>
@@ -36,73 +61,104 @@
     <section class="panes">
       <div class="pane">
         <div class="pane-head">
-          <label for="input">Texto original</label>
+          <label for="input" data-i18n="inputLabel">Texto original</label>
           <div class="actions">
-            <button type="button" id="btnSample">Ejemplo</button>
-            <button type="button" id="btnOpen">Abrir archivo</button>
-            <button type="button" id="btnClear">Borrar</button>
+            <button type="button" id="btnSample" data-i18n="sample">Ejemplo</button>
+            <button type="button" id="btnOpen" data-i18n="open">Abrir archivo</button>
+            <button type="button" id="btnClear" data-i18n="clear">Borrar</button>
             <input type="file" id="fileInput" accept=".log,.txt,.conf,.cfg,.rsc,.json,.yaml,.yml,.env,.ini,.csv,text/*" hidden>
           </div>
         </div>
         <textarea id="input" spellcheck="false" autocomplete="off" wrap="off"
+          data-i18n-placeholder="inputPlaceholder"
           placeholder="Pega aquí tu log o configuración, o arrastra un archivo…"></textarea>
       </div>
 
       <div class="pane">
         <div class="pane-head">
-          <span id="outputLabel">Resultado</span>
+          <span id="outputLabel" data-i18n="outputLabel">Resultado</span>
           <div class="actions">
-            <button type="button" id="btnCopy" class="primary" disabled>Copiar</button>
-            <button type="button" id="btnDownload" disabled>Descargar</button>
+            <button type="button" id="btnCopy" class="primary" data-i18n="copy" disabled>Copiar</button>
+            <button type="button" id="btnDownload" data-i18n="download" disabled>Descargar</button>
           </div>
         </div>
-        <pre id="output" class="output" tabindex="0" aria-labelledby="outputLabel" aria-live="polite"></pre>
+        <pre id="output" class="output" tabindex="0" aria-labelledby="outputLabel" aria-live="polite"
+          data-i18n-data-empty="outputEmpty" data-empty="El resultado aparecerá aquí."></pre>
       </div>
     </section>
 
-    <p id="status" class="status" role="status"></p>
+    <div class="status-row">
+      <p id="status" class="status" role="status"></p>
+      <p class="hint" data-i18n="shortcut">Ctrl + Enter limpia y copia.</p>
+    </div>
     <div id="stats" class="chips stats"></div>
 
     <details id="replacementsBox">
-      <summary>Tabla de reemplazos <span id="replacementsCount" class="muted"></span></summary>
-      <p class="warning">⚠️ Esta tabla contiene los datos originales. Úsala para interpretar respuestas, pero no la compartas.</p>
+      <summary><span data-i18n="replacementsTitle">Tabla de reemplazos</span> <span id="replacementsCount" class="muted"></span></summary>
+      <p class="warning" data-i18n="replacementsWarning">⚠️ Esta tabla contiene los datos originales. Úsala para interpretar respuestas, pero no la compartas.</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Marcador</th><th>Valor original</th><th>Tipo</th><th>Veces</th></tr></thead>
+          <thead>
+            <tr>
+              <th data-i18n="thPlaceholder">Marcador</th>
+              <th data-i18n="thOriginal">Valor original</th>
+              <th data-i18n="thType">Tipo</th>
+              <th data-i18n="thCount">Veces</th>
+            </tr>
+          </thead>
           <tbody id="replacements"></tbody>
         </table>
+      </div>
+      <div class="actions end">
+        <button type="button" id="btnCsv" data-i18n="downloadCsv" disabled>Descargar CSV</button>
+      </div>
+    </details>
+
+    <details id="restoreBox">
+      <summary data-i18n="restoreTitle">Restaurar una respuesta</summary>
+      <p class="hint" data-i18n="restoreHint">Pega la respuesta que recibiste y LogScrub pondrá de vuelta los valores originales.</p>
+      <div class="rules">
+        <textarea id="restoreInput" spellcheck="false" rows="6" aria-labelledby="restoreTitleLabel"
+          data-i18n-placeholder="restorePlaceholder" placeholder="Por ejemplo: «Bloquea IP_1 en el firewall de HOST_2»"></textarea>
+        <div class="restore-out">
+          <div class="pane-head flat">
+            <span id="restoreTitleLabel" data-i18n="restoreOutputLabel">Respuesta con valores originales</span>
+            <button type="button" id="btnCopyRestored" data-i18n="copy" disabled>Copiar</button>
+          </div>
+          <pre id="restoreOutput" class="output small" tabindex="0" data-i18n-data-empty="restoreEmpty" data-empty=""></pre>
+        </div>
       </div>
     </details>
 
     <details>
-      <summary>Reglas personalizadas</summary>
+      <summary data-i18n="rulesTitle">Reglas personalizadas</summary>
       <div class="rules">
         <div>
-          <label for="customRules">Ocultar siempre <span class="muted">(una por línea)</span></label>
-          <textarea id="customRules" spellcheck="false" rows="5"
-            placeholder="Acme Corp => EMPRESA&#10;/PRJ-\d{4}/&#10;/cliente=(?<v>\d+)/ => CLIENTE"></textarea>
-          <p class="hint">Texto literal, o <code>/regex/</code>. Con <code>=&gt; NOMBRE</code> eliges el marcador. Si la regex tiene un grupo <code>(?&lt;v&gt;…)</code>, solo se reemplaza ese grupo.</p>
+          <label for="customRules"><span data-i18n="alwaysHide">Ocultar siempre</span> <span class="muted" data-i18n="onePerLine">(una por línea)</span></label>
+          <textarea id="customRules" spellcheck="false" rows="5" data-i18n-placeholder="rulesPlaceholder"></textarea>
+          <p class="hint" data-i18n-html="rulesHint"></p>
           <ul id="ruleErrors" class="errors"></ul>
         </div>
         <div>
-          <label for="allowlist">Nunca ocultar <span class="muted">(uno por línea)</span></label>
-          <textarea id="allowlist" spellcheck="false" rows="5" placeholder="8.8.8.8&#10;github.com"></textarea>
-          <p class="hint">Valores exactos que se dejarán tal cual, por ejemplo DNS públicos o dominios conocidos.</p>
+          <label for="allowlist"><span data-i18n="neverHide">Nunca ocultar</span> <span class="muted" data-i18n="onePerLine">(uno por línea)</span></label>
+          <textarea id="allowlist" spellcheck="false" rows="5" data-i18n-placeholder="allowPlaceholder"></textarea>
+          <p class="hint" data-i18n="allowHint"></p>
         </div>
       </div>
     </details>
 
-    <p class="note">Revisa siempre el resultado antes de compartirlo: LogScrub reduce el riesgo, pero ninguna herramienta detecta el 100 % de los datos sensibles.</p>
+    <p class="note" data-i18n="note">Revisa siempre el resultado antes de compartirlo.</p>
   </main>
 
   <footer>
-    <a href="https://github.com/Draylinp/logscrub">Código en GitHub</a> · Licencia MIT
+    <a href="https://github.com/Draylinp/logscrub" data-i18n="footerCode">Código en GitHub</a> · <a href="https://github.com/Draylinp/logscrub/issues/new/choose" data-i18n="footerContact">Soporte y sugerencias</a> · <span data-i18n="footerLicense">Licencia MIT</span>
   </footer>
 
-  <div id="dropOverlay" class="drop-overlay" hidden>Suelta el archivo para cargarlo</div>
+  <div id="dropOverlay" class="drop-overlay" data-i18n="drop" hidden>Suelta el archivo para cargarlo</div>
 
   <script src="js/detectors.js"></script>
   <script src="js/scrubber.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

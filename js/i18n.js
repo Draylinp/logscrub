@@ -1,0 +1,188 @@
+// LogScrub · textos de la interfaz en español e inglés
+// Claves usadas en index.html con data-i18n (texto), data-i18n-html (HTML fijo),
+// data-i18n-placeholder, data-i18n-title y data-i18n-aria-label.
+(function (root) {
+  "use strict";
+
+  const es = {
+    pageTitle: "LogScrub · Limpia tus logs antes de compartirlos",
+    pageDescription: "Anonimiza IPs, MACs, correos, contraseñas y tokens en logs y configuraciones. Todo ocurre en tu navegador.",
+    tagline: "Limpia logs y configuraciones antes de compartirlos.",
+    badge: "🔒 100 % en tu navegador. Nada se sube a ningún servidor.",
+    langButton: "English",
+    langTitle: "Switch to English",
+    themeAuto: "Tema: automático (sistema)",
+    themeLight: "Tema: claro",
+    themeDark: "Tema: oscuro",
+
+    legendHide: "Ocultar",
+    legendOptions: "Opciones",
+    keepPrivate: "Conservar IPs privadas",
+    keepSpecial: "Conservar máscaras y loopback",
+    formatLabel: "Marcador",
+
+    cat_privateKey: "Claves privadas",
+    cat_token: "Tokens y claves API",
+    cat_secret: "Contraseñas y secretos",
+    cat_user: "Usuarios",
+    cat_email: "Correos",
+    cat_mac: "Direcciones MAC",
+    cat_ipv6: "IPv6",
+    cat_ipv4: "IPv4",
+    cat_hostname: "Hostnames y dominios",
+    cat_custom: "Personalizadas",
+
+    inputLabel: "Texto original",
+    sample: "Ejemplo",
+    open: "Abrir archivo",
+    clear: "Borrar",
+    inputPlaceholder: "Pega aquí tu log o configuración, o arrastra un archivo…",
+    outputLabel: "Resultado",
+    outputEmpty: "El resultado aparecerá aquí.",
+    copy: "Copiar",
+    copied: "¡Copiado!",
+    download: "Descargar",
+    shortcut: "Ctrl + Enter limpia y copia.",
+
+    statusNone: "No se encontraron datos sensibles. Revisa el texto de todos modos.",
+    statusDone: (n, u, lines, ms) =>
+      `${n} ${n === 1 ? "valor reemplazado" : "valores reemplazados"} (${u} ${u === 1 ? "único" : "únicos"}) · ${lines} ${lines === 1 ? "línea" : "líneas"} · ${ms} ms`,
+    fileTooBig: (mb) => `El archivo pesa más de ${mb} MB. Divídelo en partes más pequeñas.`,
+    fileError: "No se pudo leer el archivo.",
+    drop: "Suelta el archivo para cargarlo",
+
+    replacementsTitle: "Tabla de reemplazos",
+    replacementsWarning: "⚠️ Esta tabla contiene los datos originales. Úsala para interpretar respuestas, pero no la compartas.",
+    thPlaceholder: "Marcador",
+    thOriginal: "Valor original",
+    thType: "Tipo",
+    thCount: "Veces",
+    moreRows: (n) => `… y ${n} más.`,
+    downloadCsv: "Descargar CSV",
+
+    restoreTitle: "Restaurar una respuesta",
+    restoreHint: "Pega la respuesta que recibiste (de soporte, un foro o una IA) y LogScrub pondrá de vuelta los valores originales en lugar de los marcadores. Usa la tabla del texto que limpiaste arriba.",
+    restorePlaceholder: "Por ejemplo: «Bloquea IP_1 en el firewall de HOST_2»",
+    restoreEmpty: "Primero limpia un texto arriba para tener una tabla de reemplazos.",
+    restoreOutputLabel: "Respuesta con valores originales",
+
+    rulesTitle: "Reglas personalizadas",
+    alwaysHide: "Ocultar siempre",
+    onePerLine: "(una por línea)",
+    rulesPlaceholder: "Acme Corp => EMPRESA\n/PRJ-\\d{4}/\n/cliente=(?<v>\\d+)/ => CLIENTE",
+    rulesHint:
+      "Texto literal, o <code>/regex/</code>. Con <code>=&gt; NOMBRE</code> eliges el marcador. Si la regex tiene un grupo <code>(?&lt;v&gt;…)</code>, solo se reemplaza ese grupo.",
+    neverHide: "Nunca ocultar",
+    allowPlaceholder: "8.8.8.8\ngithub.com",
+    allowHint: "Valores exactos que se dejarán tal cual, por ejemplo DNS públicos o dominios conocidos.",
+    ruleError: (line, msg) => `Línea ${line}: ${msg}`,
+
+    note: "Revisa siempre el resultado antes de compartirlo: LogScrub reduce el riesgo, pero ninguna herramienta detecta el 100 % de los datos sensibles.",
+    footerCode: "Código en GitHub",
+    footerContact: "Soporte y sugerencias",
+    footerLicense: "Licencia MIT",
+    noscript: "LogScrub necesita JavaScript. Todo se procesa en tu navegador.",
+
+    sampleComments: {
+      syslog: "# --- syslog / sshd ---",
+      nginx: "# --- nginx ---",
+      app: "# --- aplicación ---",
+      mikrotik: "# --- MikroTik ---",
+      cisco: "# --- Cisco IOS ---",
+      fortigate: "# --- FortiGate ---",
+      ipv6: "# --- IPv6 ---",
+    },
+  };
+
+  const en = {
+    pageTitle: "LogScrub · Sanitize logs before sharing them",
+    pageDescription: "Anonymize IPs, MACs, emails, passwords and tokens in logs and configs. Everything happens in your browser.",
+    tagline: "Sanitize logs and configs before sharing them.",
+    badge: "🔒 100% in your browser. Nothing is uploaded anywhere.",
+    langButton: "Español",
+    langTitle: "Cambiar a español",
+    themeAuto: "Theme: auto (system)",
+    themeLight: "Theme: light",
+    themeDark: "Theme: dark",
+
+    legendHide: "Hide",
+    legendOptions: "Options",
+    keepPrivate: "Keep private IPs",
+    keepSpecial: "Keep netmasks & loopback",
+    formatLabel: "Placeholder",
+
+    cat_privateKey: "Private keys",
+    cat_token: "Tokens & API keys",
+    cat_secret: "Passwords & secrets",
+    cat_user: "Usernames",
+    cat_email: "Emails",
+    cat_mac: "MAC addresses",
+    cat_ipv6: "IPv6",
+    cat_ipv4: "IPv4",
+    cat_hostname: "Hostnames & domains",
+    cat_custom: "Custom",
+
+    inputLabel: "Original text",
+    sample: "Sample",
+    open: "Open file",
+    clear: "Clear",
+    inputPlaceholder: "Paste your log or config here, or drop a file…",
+    outputLabel: "Result",
+    outputEmpty: "The result will appear here.",
+    copy: "Copy",
+    copied: "Copied!",
+    download: "Download",
+    shortcut: "Ctrl + Enter scrubs and copies.",
+
+    statusNone: "No sensitive data found. Review the text anyway.",
+    statusDone: (n, u, lines, ms) =>
+      `${n} ${n === 1 ? "value" : "values"} replaced (${u} unique) · ${lines} ${lines === 1 ? "line" : "lines"} · ${ms} ms`,
+    fileTooBig: (mb) => `The file is larger than ${mb} MB. Split it into smaller parts.`,
+    fileError: "Could not read the file.",
+    drop: "Drop the file to load it",
+
+    replacementsTitle: "Replacements table",
+    replacementsWarning: "⚠️ This table contains the original values. Use it to interpret answers, but don't share it.",
+    thPlaceholder: "Placeholder",
+    thOriginal: "Original value",
+    thType: "Type",
+    thCount: "Count",
+    moreRows: (n) => `… and ${n} more.`,
+    downloadCsv: "Download CSV",
+
+    restoreTitle: "Restore a reply",
+    restoreHint: "Paste the reply you got (from support, a forum or an AI) and LogScrub will put the original values back in place of the placeholders. It uses the table from the text you scrubbed above.",
+    restorePlaceholder: "For example: “Block IP_1 on HOST_2's firewall”",
+    restoreEmpty: "Scrub some text above first to build a replacements table.",
+    restoreOutputLabel: "Reply with original values",
+
+    rulesTitle: "Custom rules",
+    alwaysHide: "Always hide",
+    onePerLine: "(one per line)",
+    rulesPlaceholder: "Acme Corp => COMPANY\n/PRJ-\\d{4}/\n/client=(?<v>\\d+)/ => CLIENT",
+    rulesHint:
+      "Literal text, or <code>/regex/</code>. Add <code>=&gt; NAME</code> to choose the placeholder. If the regex has a <code>(?&lt;v&gt;…)</code> group, only that group is replaced.",
+    neverHide: "Never hide",
+    allowPlaceholder: "8.8.8.8\ngithub.com",
+    allowHint: "Exact values that will be left as they are, such as public DNS servers or well-known domains.",
+    ruleError: (line, msg) => `Line ${line}: ${msg}`,
+
+    note: "Always review the result before sharing it: LogScrub reduces risk, but no tool catches 100% of sensitive data.",
+    footerCode: "Source on GitHub",
+    footerContact: "Support & suggestions",
+    footerLicense: "MIT License",
+    noscript: "LogScrub needs JavaScript. Everything is processed in your browser.",
+
+    sampleComments: {
+      syslog: "# --- syslog / sshd ---",
+      nginx: "# --- nginx ---",
+      app: "# --- application ---",
+      mikrotik: "# --- MikroTik ---",
+      cisco: "# --- Cisco IOS ---",
+      fortigate: "# --- FortiGate ---",
+      ipv6: "# --- IPv6 ---",
+    },
+  };
+
+  root.LogScrubI18n = { es, en };
+})(typeof globalThis !== "undefined" ? globalThis : this);

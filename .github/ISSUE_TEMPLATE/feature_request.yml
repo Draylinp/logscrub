@@ -1,0 +1,16 @@
+name: 💡 Suggestion · Sugerencia
+description: A new detector, device format or feature · Un nuevo detector, formato de equipo o función
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like? · ¿Qué te gustaría?
+      placeholder: "e.g. detect Juniper secrets · p. ej. detectar secretos de Juniper"
+    validations:
+      required: true
+  - type: textarea
+    id: sample
+    attributes:
+      label: Sample text with fake values (optional) · Texto de ejemplo con valores falsos (opcional)
+      render: text
