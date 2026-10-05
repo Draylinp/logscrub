@@ -7,6 +7,8 @@
 
 🔗 **Pruébalo:** https://draylinp.github.io/logscrub/?lang=es · 🇬🇧 [Read in English](README.md)
 
+<p align="center"><img src="assets/demo.gif" alt="LogScrub reemplazando IPs, usuarios, contraseñas y tokens en un log mientras se escribe" width="860"></p>
+
 Pega un log, la configuración de un router o la salida de un comando. LogScrub reemplaza IPs, MACs, correos, hostnames, contraseñas y tokens por **marcadores consistentes** (`IP_1`, `HOST_2`), para que el texto siga sirviendo para diagnosticar con soporte, en un foro o con un asistente de IA.
 
 ```diff

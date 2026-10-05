@@ -327,7 +327,7 @@ td:nth-child(2) { word-break: break-all; white-space: pre-wrap; }
 
 .pane-head.flat { font-size: 0.9rem; padding: 0.35rem 0.6rem; }
 
-.output.small { height: auto; min-height: 8rem; max-height: 40vh; }
+.output.small { height: auto; min-height: 8rem; max-height: 40vh; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 #restoreBox .rules > textarea { margin-top: 0.35rem; }
 
