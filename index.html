@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- connect-src 'none': el navegador bloquea cualquier envío de datos desde esta página -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
   <title>LogScrub · Limpia tus logs antes de compartirlos</title>
   <meta name="description" content="Anonimiza IPs, MACs, correos, contraseñas y tokens en logs y configuraciones. Todo ocurre en tu navegador.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -15,14 +19,90 @@
   </header>
 
   <main>
-    <p class="soon">En construcción. Versión 0.1 próximamente.</p>
+    <section class="options" aria-label="Qué ocultar">
+      <fieldset>
+        <legend>Ocultar</legend>
+        <div id="categories" class="chips"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Opciones</legend>
+        <div class="chips">
+          <label class="chip"><input type="checkbox" id="keepPrivate"> Conservar IPs privadas</label>
+          <label class="chip"><input type="checkbox" id="keepSpecial" checked> Conservar máscaras y loopback</label>
+        </div>
+      </fieldset>
+    </section>
+
+    <section class="panes">
+      <div class="pane">
+        <div class="pane-head">
+          <label for="input">Texto original</label>
+          <div class="actions">
+            <button type="button" id="btnSample">Ejemplo</button>
+            <button type="button" id="btnOpen">Abrir archivo</button>
+            <button type="button" id="btnClear">Borrar</button>
+            <input type="file" id="fileInput" accept=".log,.txt,.conf,.cfg,.rsc,.json,.yaml,.yml,.env,.ini,.csv,text/*" hidden>
+          </div>
+        </div>
+        <textarea id="input" spellcheck="false" autocomplete="off" wrap="off"
+          placeholder="Pega aquí tu log o configuración, o arrastra un archivo…"></textarea>
+      </div>
+
+      <div class="pane">
+        <div class="pane-head">
+          <span id="outputLabel">Resultado</span>
+          <div class="actions">
+            <button type="button" id="btnCopy" class="primary" disabled>Copiar</button>
+            <button type="button" id="btnDownload" disabled>Descargar</button>
+          </div>
+        </div>
+        <pre id="output" class="output" tabindex="0" aria-labelledby="outputLabel" aria-live="polite"></pre>
+      </div>
+    </section>
+
+    <p id="status" class="status" role="status"></p>
+    <div id="stats" class="chips stats"></div>
+
+    <details id="replacementsBox">
+      <summary>Tabla de reemplazos <span id="replacementsCount" class="muted"></span></summary>
+      <p class="warning">⚠️ Esta tabla contiene los datos originales. Úsala para interpretar respuestas, pero no la compartas.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Marcador</th><th>Valor original</th><th>Tipo</th><th>Veces</th></tr></thead>
+          <tbody id="replacements"></tbody>
+        </table>
+      </div>
+    </details>
+
+    <details>
+      <summary>Reglas personalizadas</summary>
+      <div class="rules">
+        <div>
+          <label for="customRules">Ocultar siempre <span class="muted">(una por línea)</span></label>
+          <textarea id="customRules" spellcheck="false" rows="5"
+            placeholder="Acme Corp => EMPRESA&#10;/PRJ-\d{4}/&#10;/cliente=(?<v>\d+)/ => CLIENTE"></textarea>
+          <p class="hint">Texto literal, o <code>/regex/</code>. Con <code>=&gt; NOMBRE</code> eliges el marcador. Si la regex tiene un grupo <code>(?&lt;v&gt;…)</code>, solo se reemplaza ese grupo.</p>
+          <ul id="ruleErrors" class="errors"></ul>
+        </div>
+        <div>
+          <label for="allowlist">Nunca ocultar <span class="muted">(uno por línea)</span></label>
+          <textarea id="allowlist" spellcheck="false" rows="5" placeholder="8.8.8.8&#10;github.com"></textarea>
+          <p class="hint">Valores exactos que se dejarán tal cual, por ejemplo DNS públicos o dominios conocidos.</p>
+        </div>
+      </div>
+    </details>
+
+    <p class="note">Revisa siempre el resultado antes de compartirlo: LogScrub reduce el riesgo, pero ninguna herramienta detecta el 100 % de los datos sensibles.</p>
   </main>
 
   <footer>
     <a href="https://github.com/Draylinp/logscrub">Código en GitHub</a> · Licencia MIT
   </footer>
 
+  <div id="dropOverlay" class="drop-overlay" hidden>Suelta el archivo para cargarlo</div>
+
   <script src="js/detectors.js"></script>
+  <script src="js/scrubber.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
