@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0 · 2026-10-05
+
+- **Command line:** `npx github:Draylinp/logscrub`, with stdin/stdout, multiple files with shared numbering, `--out-dir`, `--map` / `--restore`, `--check` for CI (never prints the values), `--json`, `--stats`
+- **Network devices:** Juniper Junos, Huawei VRP, VyOS / EdgeOS, pfSense / OPNsense `config.xml`, WireGuard, OpenVPN static keys
+- **Cloud and DevOps:** Kubernetes Secrets, Azure (connection strings, SAS, client secrets), Google service accounts and OAuth, Docker, Docker Hub, DigitalOcean, Vault, SendGrid, Shopify, Hugging Face, PyPI, Discord webhooks, CLI `--password`/`--token` flags
+- **Personal data:** phone numbers, credit cards (Luhn), IBAN (mod 97), Dominican cédula and RNC, Spanish DNI, Mexican CURP, US SSN
+- **Users and devices:** usernames in Windows/Linux/macOS paths, Windows SIDs, serial numbers
+- Fewer false positives for hostnames (`p.id`, `u.name`, `logger.info(`)
+
 ## 0.5.0 · 2026-10-05
 
 - English / Spanish interface (auto-detected, switchable, `?lang=en` / `?lang=es`)

@@ -1,9 +1,41 @@
 {
   "name": "logscrub",
-  "version": "0.5.0",
-  "description": "Sanitize logs and configs before sharing them. 100% in your browser, nothing is uploaded.",
-  "private": true,
+  "version": "0.6.0",
+  "description": "Sanitize logs and configs before sharing them. 100% local: in your browser or your terminal, nothing is uploaded.",
   "license": "MIT",
+  "author": "Draylin",
+  "homepage": "https://draylinp.github.io/logscrub/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Draylinp/logscrub.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Draylinp/logscrub/issues"
+  },
+  "keywords": [
+    "logs",
+    "sanitize",
+    "anonymize",
+    "redact",
+    "privacy",
+    "secrets",
+    "mikrotik",
+    "cisco",
+    "fortigate",
+    "cli"
+  ],
+  "bin": {
+    "logscrub": "bin/logscrub.js"
+  },
+  "main": "js/scrubber.js",
+  "files": [
+    "bin/",
+    "js/detectors.js",
+    "js/scrubber.js"
+  ],
+  "engines": {
+    "node": ">=18.3"
+  },
   "scripts": {
     "test": "node --test \"tests/**/*.test.js\""
   }

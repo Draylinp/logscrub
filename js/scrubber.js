@@ -14,6 +14,7 @@
     customRules: "", // texto con una regla por línea (ver parseCustomRules)
     allowlist: "", // valores que nunca se reemplazan, uno por línea
     format: "plain", // aspecto del marcador: ver FORMATS
+    state: null, // createState(): comparte la numeración entre varias llamadas (varios archivos)
   };
 
   // IP_1 · [IP_1] · <IP_1> · {{IP_1}}
@@ -101,6 +102,23 @@
     }
   }
 
+  function createState() {
+    return { counters: {}, byKey: new Map() };
+  }
+
+  // Posiciones [inicio, fin] de cada coincidencia de un detector.
+  function* candidates(det, input) {
+    if (det.find) {
+      yield* det.find(input);
+      return;
+    }
+    det.pattern.lastIndex = 0;
+    for (const m of input.matchAll(det.pattern)) {
+      const span = spanFor(m, det.group);
+      if (span) yield span;
+    }
+  }
+
   function spanFor(match, group) {
     if (group) {
       const span = match.indices && match.indices.groups && match.indices.groups[group];
@@ -119,7 +137,7 @@
     const detectors = customRules.concat(
       DETECTORS.filter((d) => opts.categories[d.category] !== false).map((d) => ({
         ...d,
-        group: d.pattern.source.includes("(?<v>") ? "v" : undefined,
+        group: d.pattern && d.pattern.source.includes("(?<v>") ? "v" : undefined,
       }))
     );
 
@@ -129,10 +147,7 @@
     const found = [];
 
     for (const det of detectors) {
-      det.pattern.lastIndex = 0;
-      for (const m of input.matchAll(det.pattern)) {
-        const span = spanFor(m, det.group);
-        if (!span) continue;
+      for (const span of candidates(det, input)) {
         let [start, end] = span;
         const first = input[start];
         if (end - start >= 2 && (first === '"' || first === "'") && input[end - 1] === first) {
@@ -161,8 +176,8 @@
     found.sort((a, b) => a.start - b.start);
 
     // Marcadores numerados por orden de aparición.
-    const counters = {};
-    const byKey = new Map();
+    const { counters, byKey } = opts.state || createState();
+    const used = new Set();
     const parts = [];
     let pos = 0;
     for (const f of found) {
@@ -179,6 +194,7 @@
         byKey.set(key, entry);
       }
       entry.count++;
+      used.add(entry);
       f.placeholder = entry.placeholder;
       parts.push(input.slice(pos, f.start), entry.placeholder);
       pos = f.end;
@@ -191,7 +207,7 @@
     return {
       output: parts.join(""),
       findings: found,
-      replacements: [...byKey.values()],
+      replacements: [...used],
       stats,
       errors,
     };
@@ -208,7 +224,7 @@
     return input.replace(rx, (m) => map.get(m));
   }
 
-  const api = { scrub, restore, parseCustomRules, CATEGORIES, DETECTORS, DEFAULT_OPTIONS, FORMATS };
+  const api = { scrub, restore, createState, parseCustomRules, CATEGORIES, DETECTORS, DEFAULT_OPTIONS, FORMATS };
 
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.LogScrub = api;

@@ -3,7 +3,7 @@
 [![Tests](https://github.com/Draylinp/logscrub/actions/workflows/test.yml/badge.svg)](https://github.com/Draylinp/logscrub/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Sanitize logs and configs before sharing them. 100% in your browser, nothing is uploaded.**
+**Sanitize logs and configs before sharing them. 100% local, in your browser or your terminal. Nothing is uploaded.**
 
 🔗 **Try it:** https://draylinp.github.io/logscrub/ · 🇪🇸 [Leer en español](README.es.md)
 
@@ -36,14 +36,37 @@ Paste a log, a router config or command output. LogScrub replaces IPs, MAC addre
 | MAC addresses | `00:1A:2B:3C:4D:5E`, `00-1a-2b-…`, `001a.2b3c.4d5e` (all three formats → same placeholder) |
 | Emails and hostnames | `user@example.com`, `db01.internal.example.com`, the syslog host field |
 | Passwords and secrets | `password=`, `"api_key":`, `?token=`, `postgres://user:pass@host` |
-| Network devices | **MikroTik** (`wpa2-pre-shared-key`, `/system identity`), **Cisco IOS** (`enable secret`, `username … secret`, `snmp-server community`, `key-string`, `isakmp key`), **FortiGate** (`set password ENC`, `set psksecret`, `set hostname`) |
-| Tokens | JWT, AWS, GitHub, GitLab, Slack, Google, Stripe, `sk-…` API keys, npm, Telegram, `Authorization:` headers |
+| Network devices | **MikroTik**, **Cisco IOS**, **FortiGate**, **Juniper Junos** (`$9$`, `## SECRET-DATA`, `host-name`), **Huawei VRP** (`cipher`, `local-user`, `sysname`), **VyOS / EdgeOS** (`plaintext-password`, `pre-shared-secret`), **pfSense / OPNsense** `config.xml`, **WireGuard**, **OpenVPN** static keys |
+| Cloud and DevOps | Kubernetes `Secret` manifests, Azure connection strings, SAS signatures and client secrets, Google service-account JSON and OAuth, Docker `config.json`, `--password` / `--token` flags, SQL Server connection strings |
+| Tokens | JWT, AWS, GitHub, GitLab, Slack, Google, Stripe, `sk-…` API keys, npm, Docker Hub, DigitalOcean, Vault, SendGrid, Shopify, Hugging Face, PyPI, Discord and Slack webhooks, Telegram, `Authorization:` headers |
 | Private keys | Full PEM / OpenSSH `PRIVATE KEY` blocks |
-| Usernames | `username …`, `user=`, sshd `for invalid user …` |
+| Usernames | `username …`, `user=`, sshd `for invalid user …`, `C:\Users\name`, `/home/name`, `/Users/name`, Windows SIDs |
+| Personal data | Phone numbers, credit cards (Luhn-checked), IBAN (checksum-validated), Dominican cédula and RNC, Spanish DNI, Mexican CURP, US SSN |
+| Serial numbers | Cisco `Processor board ID`, `SN:`, MikroTik `serial-number`, FortiGate `Serial-Number` |
+
+## Command line
+
+The same engine runs in your terminal (Node.js 18.3+). Nothing is installed globally and nothing leaves your machine.
+
+```bash
+npx github:Draylinp/logscrub router.rsc > router.clean.rsc
+```
+
+```bash
+logscrub app.log                         # scrub to stdout
+journalctl -u nginx | logscrub --stats   # from a pipe, summary on stderr
+logscrub -m map.json *.log -d clean/     # one clean file per input, shared numbering
+logscrub --restore -m map.json reply.txt # put the original values back
+logscrub --check config/*.yaml           # CI / pre-commit: exit 1 if secrets are found
+```
+
+Useful options: `--only ipv4,secret`, `--disable hostname`, `--keep-private`, `-f brackets`, `--rules rules.txt`, `--allow allow.txt`, `--json`. Run `logscrub --help` for all of them and `logscrub --list` for the categories.
+
+`--check` reports only the file, line, column and type of each finding. It never prints the sensitive value.
 
 ## Privacy
 
-- Everything runs locally in JavaScript. The page's Content-Security-Policy sets `connect-src 'none'`, so **the browser itself blocks any network request**.
+- Everything runs locally in JavaScript, in the browser or in Node.js. The page's Content-Security-Policy sets `connect-src 'none'`, so **the browser itself blocks any network request**.
 - Your text is never stored. Only your preferences are saved in `localStorage`: categories, options, custom rules, language and theme.
 - The replacements table contains the original values. It's for you, so don't share it.
 
@@ -59,13 +82,14 @@ npm test   # engine tests with Node's built-in test runner (Node 18+)
 
 ```
 index.html          page
+bin/logscrub.js     command line
 css/styles.css      styles (light/dark tokens)
 js/detectors.js     detection rules: order = priority
 js/scrubber.js      engine: overlaps, consistent placeholders, custom rules, restore
 js/i18n.js          English / Spanish texts
 js/theme.js         applies the saved theme before first paint
 js/app.js           UI
-tests/              engine tests
+tests/              engine, detector and CLI tests
 ```
 
 Want to add a detector? Add it to `js/detectors.js` in the right priority position, add a test in `tests/scrubber.test.js` and run `npm test`.
@@ -77,8 +101,9 @@ Want to add a detector? Add it to `js/detectors.js` in the right priority positi
 - [x] v0.3 · Secrets in MikroTik, Cisco and FortiGate configs, JWT, cloud keys
 - [x] v0.4 · Custom rules
 - [x] v0.5 · English version, theme toggle, restore replies, CSV export
-- [ ] v0.6 · More devices (Juniper, Ubiquiti, pfSense / OPNsense)
-- [ ] v1.0 · CLI version
+- [x] v0.6 · Juniper, Huawei, VyOS/EdgeOS, pfSense/OPNsense; cloud & DevOps secrets; personal data; user paths; serial numbers; CLI
+- [ ] v0.7 · Publish to npm, pre-commit hook
+- [ ] v1.0 · Stable API
 
 See [CHANGELOG.md](CHANGELOG.md) for details.
 

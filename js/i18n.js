@@ -30,6 +30,10 @@
     cat_ipv6: "IPv6",
     cat_ipv4: "IPv4",
     cat_hostname: "Hostnames y dominios",
+    cat_phone: "Teléfonos",
+    cat_financial: "Tarjetas e IBAN",
+    cat_nationalId: "Documentos de identidad",
+    cat_serial: "Números de serie",
     cat_custom: "Personalizadas",
 
     inputLabel: "Texto original",
@@ -90,6 +94,9 @@
       mikrotik: "# --- MikroTik ---",
       cisco: "# --- Cisco IOS ---",
       fortigate: "# --- FortiGate ---",
+      juniper: "# --- Juniper / pfSense ---",
+      windows: "# --- Windows ---",
+      personal: "# --- datos personales ---",
       ipv6: "# --- IPv6 ---",
     },
   };
@@ -120,6 +127,10 @@
     cat_ipv6: "IPv6",
     cat_ipv4: "IPv4",
     cat_hostname: "Hostnames & domains",
+    cat_phone: "Phone numbers",
+    cat_financial: "Cards & IBAN",
+    cat_nationalId: "ID numbers",
+    cat_serial: "Serial numbers",
     cat_custom: "Custom",
 
     inputLabel: "Original text",
@@ -180,6 +191,9 @@
       mikrotik: "# --- MikroTik ---",
       cisco: "# --- Cisco IOS ---",
       fortigate: "# --- FortiGate ---",
+      juniper: "# --- Juniper / pfSense ---",
+      windows: "# --- Windows ---",
+      personal: "# --- personal data ---",
       ipv6: "# --- IPv6 ---",
     },
   };
